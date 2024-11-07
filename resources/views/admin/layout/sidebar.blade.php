@@ -63,20 +63,39 @@
             </a>
         </li>
 
-        <li class="menu-item {{ isActiveRoute(['admin.attendances.list']) }}">
-            <a href="{{ route('admin.attendances.list') }}" class="menu-link">
-                <i class='menu-icon tf-icons bx bx-street-view'></i>
-                <div data-i18n="Analytics">Attendances</div>
+        <li class="menu-item {{ isActiveRoute(['admin.categories.index', 'admin.categories.create', 'admin.categories.edit', 'admin.categories.show']) }}">
+            <a href="{{ route('admin.categories.index') }}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-folder'></i>
+                <div data-i18n="Categories">Categories</div>
+            </a>
+        </li>
+        <li class="menu-item {{ isActiveRoute(['admin.sub-categories.index', 'admin.sub-categories.create', 'admin.sub-categories.edit', 'admin.sub-categories.show']) }}">
+            <a href="{{ route('admin.sub-categories.index') }}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-category'></i>
+                <div data-i18n="Sub Categories">Sub Categories</div>
+            </a>
+        </li>
+        <li class="menu-item {{ isActiveRoute(['admin.tests.index', 'admin.tests.create', 'admin.tests.edit', 'admin.tests.show']) }}">
+            <a href="{{ route('admin.tests.index') }}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-badge-check'></i>
+                <div data-i18n="Tests">Tests</div>
             </a>
         </li>
 
-        <li
+        <li class="menu-item {{ isActiveRoute(['admin.report.index', 'admin.report.create', 'admin.report.edit', 'admin.report.show']) }}">
+            <a href="{{ route('admin.report.index') }}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-badge-check'></i>
+                <div data-i18n="report">Report</div>
+            </a>
+        </li>
+
+        {{-- <li
             class="menu-item {{ isActiveRoute(['admin.students.index', 'admin.students.create', 'admin.students.edit']) }}">
             <a href="{{ route('admin.students.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="Analytics">Students</div>
             </a>
-        </li>
+        </li> --}}
 
         {{-- <li class="menu-item {{ isActiveRoute(['admin.bookings']) }}">
             <a href="{{ route('admin.bookings') }}" class="menu-link">

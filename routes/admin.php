@@ -8,6 +8,10 @@ use App\Http\Controllers\Admin\TempraryImageController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\HomePageCarouselController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\TestController;
+use App\Http\Controllers\Admin\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,25 +50,6 @@ Route::middleware('role:admin')->group(function () {
     Route::get('/contacts', [AdminController::class, 'contacts'])->name('contacts');
     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
 
-    // Student routes
-    Route::group(['prefix' => '/students', 'as' => 'students.'], function () {
-        Route::get('/', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\UserController::class, 'create'])->name('create');
-        Route::post('/store', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [\App\Http\Controllers\Admin\UserController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('destroy');
-        Route::post('/change-status', [\App\Http\Controllers\Admin\UserController::class, 'changeStatus'])->name('change.status');
-    });
-
-    // attendances
-    Route::group(['prefix' => '/attendances', 'as' => 'attendances.'], function () {
-        Route::get('/', [AttendanceController::class, 'list'])->name('list');
-        Route::post('/save-attendance', [AttendanceController::class, 'saveAttendance'])->name('save.attendance');
-        // Route::get('/our-room', [AttendanceController::class, 'ourRoomPage'])->name('our.room');
-        // Route::get('/gallery', [AttendanceController::class, 'galleryPage'])->name('gallery');
-    });
-
     Route::get('/social-media', [AdminController::class, 'socialMedia'])->name('social.media');
     Route::post('/social-media-update/{id}', [AdminController::class, 'socialMediaUpdate'])->name('social.media.update');
 
@@ -77,4 +62,9 @@ Route::middleware('role:admin')->group(function () {
 
     Route::resource('home-page-carousel', HomePageCarouselController::class);
     Route::post('/change-status', [HomePageCarouselController::class, 'changeStatus'])->name('change.status');
+
+    Route::resource('categories', CategoryController::class);
+    Route::resource('sub-categories', SubCategoryController::class);
+    Route::resource('tests', TestController::class);
+    Route::resource('report', ReportController::class);
 });
