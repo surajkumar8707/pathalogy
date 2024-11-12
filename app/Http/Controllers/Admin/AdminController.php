@@ -20,8 +20,7 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $data = $this->dashboardData();
-        return view('admin.dashboard', compact('data'));
+        return view('admin.dashboard');
     }
 
     public function dashboardData()

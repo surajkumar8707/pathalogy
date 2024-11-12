@@ -66,5 +66,11 @@ Route::middleware('role:admin')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('sub-categories', SubCategoryController::class);
     Route::resource('tests', TestController::class);
+
     Route::resource('report', ReportController::class);
+    Route::group(['prefix' => '/report', 'as' => 'report.'], function () {
+        Route::post('/generate-report', [ReportController::class, 'generateReport'])->name('generate.report');
+        Route::post('/fetch-subcategory', [ReportController::class, 'fetchSubcategory'])->name('fetch.subcategory');
+        Route::post('/fetch-test', [ReportController::class, 'fetchTest'])->name('fetch.test');
+    });
 });

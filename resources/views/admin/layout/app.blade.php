@@ -107,7 +107,8 @@
 
     <!-- Page JS -->
     <script src="{{ public_asset('assets/admin/js/dashboards-analytics.js') }}"></script>
-    <script rel="stylesheet" href="{{ public_asset('build/assets/app-Bg1aHGgo.js') }}"></script>
+    {{-- <script rel="stylesheet" href="{{ public_asset('build/assets/app-Bg1aHGgo.js') }}"></script> --}}
+    <script rel="stylesheet" href="{{ public_asset('build/assets/app-BU-axLcQ.js') }}"></script>
 
     @vite(['resources/js/app.js'])
 

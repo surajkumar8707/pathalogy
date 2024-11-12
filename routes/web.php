@@ -19,7 +19,7 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => '/', 'as' => 'front.'], function () {
-    Route::get('/', [\App\Http\Controllers\FrontController::class, 'home'])->name('home');
+    // Route::get('/', [\App\Http\Controllers\FrontController::class, 'home'])->name('home');
     Route::get('/room/{id}', [\App\Http\Controllers\FrontController::class, 'roomDetailPage'])->name('room.detail.page');
     Route::get('/book-room/{id?}', [\App\Http\Controllers\FrontController::class, 'openRoomBookingPage'])->name('room.book');
     Route::post('/booking/store', [\App\Http\Controllers\FrontController::class, 'roomBookingStore'])->name('room.store');

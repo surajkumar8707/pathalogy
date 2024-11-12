@@ -15,9 +15,9 @@
                                     your profile.
                                 </p>
 
-                                <a href="{{ route('admin.attendances.list') }}" class="btn btn-sm btn-outline-primary">Total
+                                {{-- <a href="{{ route('admin.attendances.list') }}" class="btn btn-sm btn-outline-primary">Total
                                     Present Student :
-                                    {{ $data['today_total_present_student'] }}</a>
+                                    {{ $data['today_total_present_student'] }}</a> --}}
                             </div>
                         </div>
                         <div class="col-sm-5 text-center text-sm-left">

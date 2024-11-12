@@ -41,14 +41,14 @@
                         <label for="upper_value" class="form-label">Upper Value</label>
                         <input type="number" step="0.01" class="form-control" id="upper_value" name="upper_value" required>
                     </div>
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="lower_value" class="form-label">Lower Value</label>
                         <input type="number" step="0.01" class="form-control" id="lower_value" name="lower_value" required>
                     </div>
                     <div class="mb-3">
                         <label for="percent" class="form-label">Percent (Optional)</label>
                         <input type="number" step="0.01" class="form-control" id="percent" name="percent">
-                    </div>
+                    </div> --}}
                     <button type="submit" class="btn btn-primary">Save</button>
                     <a href="{{ route('admin.tests.index') }}" class="btn btn-secondary">Back</a>
                 </form>

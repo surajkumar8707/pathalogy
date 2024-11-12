@@ -20,4 +20,9 @@ class Test extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
+
+    public function reports()
+    {
+        return $this->belongsToMany(Report::class, 'report_test');
+    }
 }
