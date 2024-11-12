@@ -66,7 +66,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="test">Tests</label>
-                                <select name="test" id="test[]" class="form-control" required multiple>
+                                <select name="test[]" id="test" class="form-control" required multiple>
                                     <option value="">-- Select Test --</option>
                                     {{-- @forelse ($tests as $key => $test)
                                         <option value="{{ $test->id }}">{{ $test->name }}</option>
