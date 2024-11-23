@@ -39,8 +39,8 @@ class TestController extends Controller
             'sub_category_id' => 'required|exists:sub_categories,id',
             'name' => 'required|string|max:255',
             'upper_value' => 'required|numeric',
+            'percent' => 'nullable|numeric'
             // 'lower_value' => 'nullable|numeric',
-            // 'percent' => 'nullable|numeric'
         ]);
 
         Test::create($request->all());
@@ -76,8 +76,8 @@ class TestController extends Controller
             'sub_category_id' => 'required|exists:sub_categories,id',
             'name' => 'required|string|max:255',
             'upper_value' => 'required|numeric',
+            'percent' => 'nullable|numeric'
             // 'lower_value' => 'nullable|numeric',
-            // 'percent' => 'nullable|numeric'
         ]);
 
         $test->update($request->all());

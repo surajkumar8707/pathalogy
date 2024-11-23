@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-12">
 
-                        @if ($subCategories->isEmpty())
+                        @if ($reports->isEmpty())
                             <p>No categories found.</p>
                         @else
                             <table class="table table-bordered table-striped">
@@ -24,11 +24,34 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Category</th>
-                                        <th>Name</th>
+                                        <th>Sub Category</th>
+                                        <th>User Details</th>
+                                        <th>Refer By Doctor</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @forelse ($reports as $report)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $report->category->name }}</td>
+                                            <td>{{ $report->subCategory->name }}</td>
+                                            <td>
+                                                <div>
+                                                    <strong>Name : </strong> {{ $report->name }} <br>
+                                                    <strong>Age : </strong> {{ $report->age }} <br>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ $report->refer_by_doctor }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.report.view.report', $report->id) }}" class="btn btn-info btn-sm">View</a>
+                                            </td>
+                                        </tr>
+                                    @empty
+
+                                    @endforelse
                                 </tbody>
                             </table>
                         @endif

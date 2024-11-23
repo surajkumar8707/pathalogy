@@ -19,7 +19,8 @@ class ReportController extends Controller
         $categories = Category::all();
         $subCategories = SubCategory::all();
         $tests = Test::all();
-        return view('admin.report.index', compact('categories', 'subCategories', 'tests'));
+        $reports = Report::all();
+        return view('admin.report.index', compact('reports'));
     }
 
     /**
@@ -99,7 +100,8 @@ class ReportController extends Controller
             // Attach the selected tests to the report
             $report->tests()->attach($request->test);
 
-            return $report;
+            return redirect()->route('admin.report.view.report', $report->id);
+            // return $report;
         }
         catch(\Exception $e){
             return redirect()->back()->with('error', $e->getMessage());
@@ -126,4 +128,42 @@ class ReportController extends Controller
             return returnWebJsonResponse($e->getMessage());
         }
     }
+
+    public function viewReport($report_id){
+        try{
+            $report = Report::findOrFail($report_id);
+            // dd(
+            //     $report->toArray(),
+            //     $report->tests->toArray(),
+            // );
+            return view('admin.report.view_report', compact('report'));
+        }
+        catch(\Exception $e){
+            return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
+            // return returnWebJsonResponse($e->getMessage());
+        }
+    }
+
+    public function updateLowerValue(Request $request)
+    {
+        // $request->validate([
+        //     'report_id' => 'required|integer|exists:reports,id',
+        //     'test_id' => 'required|integer|exists:tests,id',
+        //     'lower_value' => 'required|numeric'
+        // ]);
+
+        return $request->all();
+
+        try {
+            $report = Report::findOrFail($request->report_id);
+            $report->tests()->updateExistingPivot($request->test_id, [
+                'lower_value' => $request->lower_value
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Lower value updated successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
 }

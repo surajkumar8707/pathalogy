@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->float('upper_value');
             // $table->float('lower_value')->nullable();
-            // $table->float('percent')->nullable();
+            $table->float('percent')->nullable();
             $table->timestamps();
         });
     }

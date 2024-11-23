@@ -17,6 +17,16 @@ class Report extends Model
         'refer_by_doctor'
     ];
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function subCategory()
+    {
+        return $this->belongsTo(SubCategory::class);
+    }
+
     public function tests()
     {
         return $this->belongsToMany(Test::class, 'report_test');

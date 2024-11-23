@@ -72,5 +72,7 @@ Route::middleware('role:admin')->group(function () {
         Route::post('/generate-report', [ReportController::class, 'generateReport'])->name('generate.report');
         Route::post('/fetch-subcategory', [ReportController::class, 'fetchSubcategory'])->name('fetch.subcategory');
         Route::post('/fetch-test', [ReportController::class, 'fetchTest'])->name('fetch.test');
+        Route::get('/view/{report_id}', [ReportController::class, 'viewReport'])->name('view.report');
+        Route::post('/update-lower-value', [ReportController::class, 'updateLowerValue'])->name('update.lower.value');
     });
 });

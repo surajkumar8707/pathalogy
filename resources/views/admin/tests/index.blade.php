@@ -27,8 +27,8 @@
                                         <th>SubCategory</th>
                                         <th>Name</th>
                                         <th>Upper Value</th>
-                                        {{-- <th>Lower Value</th>
-                                        <th>Percent</th> --}}
+                                        <th>Percent</th>
+                                        {{-- <th>Lower Value</th> --}}
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -40,8 +40,8 @@
                                             <td>{{ $test->subCategory->name }}</td>
                                             <td>{{ $test->name }}</td>
                                             <td>{{ $test->upper_value }}</td>
-                                            {{-- <td>{{ $test->lower_value }}</td>
-                                            <td>{{ $test->percent ?? 'N/A' }}</td> --}}
+                                            <td>{{ $test->percent }}</td>
+                                            {{-- <td>{{ $test->lower_value }}</td> --}}
                                             <td>
                                                 <a href="{{ route('admin.tests.show', $test->id) }}" class="btn btn-info btn-sm">View</a>
                                                 <a href="{{ route('admin.tests.edit', $test->id) }}" class="btn btn-warning btn-sm">Edit</a>
