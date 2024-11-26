@@ -29,6 +29,8 @@ class Report extends Model
 
     public function tests()
     {
-        return $this->belongsToMany(Test::class, 'report_test');
+        return $this->belongsToMany(Test::class, 'report_test')
+            ->withPivot('id', 'lower_value') // Include pivot table fields
+            ->withTimestamps();
     }
 }

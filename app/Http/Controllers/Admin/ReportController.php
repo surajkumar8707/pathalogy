@@ -8,6 +8,7 @@ use App\Models\Report;
 use App\Models\SubCategory;
 use App\Models\Test;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -87,7 +88,7 @@ class ReportController extends Controller
             'test' => 'required|array', // test should be an array of selected tests
             'test.*' => 'integer|exists:tests,id' // each test should exist in the tests table
         ]);
-        try{
+        try {
             // Create a new report
             $report = Report::create([
                 'category_id' => $request->category,
@@ -102,43 +103,41 @@ class ReportController extends Controller
 
             return redirect()->route('admin.report.view.report', $report->id);
             // return $report;
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
-    public function fetchSubcategory(Request $request){
-        try{
+    public function fetchSubcategory(Request $request)
+    {
+        try {
             $subCategory = SubCategory::where('category_id', $request->category_id)->get();
             return returnWebJsonResponse("Subcategory list", 'success', $subCategory);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             return returnWebJsonResponse($e->getMessage());
         }
     }
 
-    public function fetchTest(Request $request){
-        try{
+    public function fetchTest(Request $request)
+    {
+        try {
             $tests = Test::where('sub_category_id', $request->sub_category_id)->get();
             return returnWebJsonResponse("Test list", 'success', $tests);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             return returnWebJsonResponse($e->getMessage());
         }
     }
 
-    public function viewReport($report_id){
-        try{
+    public function viewReport($report_id)
+    {
+        try {
             $report = Report::findOrFail($report_id);
             // dd(
             //     $report->toArray(),
             //     $report->tests->toArray(),
             // );
             return view('admin.report.view_report', compact('report'));
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
             // return returnWebJsonResponse($e->getMessage());
         }
@@ -146,24 +145,23 @@ class ReportController extends Controller
 
     public function updateLowerValue(Request $request)
     {
-        // $request->validate([
-        //     'report_id' => 'required|integer|exists:reports,id',
-        //     'test_id' => 'required|integer|exists:tests,id',
-        //     'lower_value' => 'required|numeric'
-        // ]);
+        $validated = $request->validate([
+            'report_test' => 'required|exists:report_test,id',
+            'lower_value' => 'nullable|numeric',
+        ]);
 
-        return $request->all();
+        // return $request->all();
 
         try {
-            $report = Report::findOrFail($request->report_id);
-            $report->tests()->updateExistingPivot($request->test_id, [
-                'lower_value' => $request->lower_value
-            ]);
-
-            return response()->json(['success' => true, 'message' => 'Lower value updated successfully.']);
+            // Find the pivot record and update
+            DB::table('report_test')
+                ->where('id', $validated['report_test'])
+                ->update(['lower_value' => $validated['lower_value']]);
+            $report_test = DB::table('report_test')->where('id', $validated['report_test'])->first();
+            return returnWebJsonResponse('Lower value updated successfully.', 'success', $report_test);
+            // return response()->json(['success' => true, 'message' => 'Lower value updated successfully.']);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+            return returnWebJsonResponse($e->getMessage());
         }
     }
-
 }
