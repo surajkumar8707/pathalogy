@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             SubCategorySeeder::class,
             TestSeeder::class,
+            ReportSeeder::class,
             // ContactSeeder::class,
             // HomePageCarouselSeeder::class,
             // SettingSeeder::class,

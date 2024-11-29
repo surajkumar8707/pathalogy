@@ -40,7 +40,33 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'age' => 'required|integer',
+            'refer_by_doctor' => 'required|string|max:255',
+            'category' => 'required|integer|exists:categories,id',
+            'sub_category' => 'required|integer|exists:sub_categories,id',
+            'test' => 'required|array', // test should be an array of selected tests
+            'test.*' => 'integer|exists:tests,id' // each test should exist in the tests table
+        ]);
+        try {
+            // Create a new report
+            $report = Report::create([
+                'category_id' => $request->category,
+                'sub_category_id' => $request->sub_category,
+                'name' => $request->name,
+                'age' => $request->age,
+                'refer_by_doctor' => $request->refer_by_doctor
+            ]);
+
+            // Attach the selected tests to the report
+            $report->tests()->attach($request->test);
+
+            return redirect()->route('admin.report.view.report', $report->id);
+            // return $report;
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -75,36 +101,91 @@ class ReportController extends Controller
         //
     }
 
-    public function generateReport(Request $request)
+    public function generateReport(int $report_id)
     {
-        // dd($request->all());
-        // Validate the request data
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'age' => 'required|integer',
-            'refer_by_doctor' => 'required|string|max:255',
-            'category' => 'required|integer|exists:categories,id',
-            'sub_category' => 'required|integer|exists:sub_categories,id',
-            'test' => 'required|array', // test should be an array of selected tests
-            'test.*' => 'integer|exists:tests,id' // each test should exist in the tests table
-        ]);
         try {
-            // Create a new report
-            $report = Report::create([
-                'category_id' => $request->category,
-                'sub_category_id' => $request->sub_category,
-                'name' => $request->name,
-                'age' => $request->age,
-                'refer_by_doctor' => $request->refer_by_doctor
+            $report = Report::findOrFail($report_id);
+            if ($report) {
+                $category = $report->category;
+                // dd(
+                //     $report->toArray(),
+                //     $category->toArray(),
+                // );
+                return view('admin.report.generate_report', compact('report'));
+            } else {
+                return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
+            // return returnWebJsonResponse($e->getMessage());
+        }
+    }
+
+    // public function saveSingleTest(Request $request)
+    // {
+    //     try {
+    //         $validated = $request->validate([
+    //             'test_id' => 'required|exists:tests,id',
+    //             'report_id' => 'nullable|exists:reports,id',
+    //         ]);
+
+    //         $where = [
+    //             'report_id' => $validated['report_id'],
+    //             'test_id' => $validated['test_id'],
+    //         ];
+    //         $report_test = DB::table('report_test')->where($where)->first();
+    //         if ($report_test) {
+    //             $report_test = DB::table('report_test')->create($where);
+    //             return returnWebJsonResponse('Test Add in Report', 'success', $report_test);
+    //         } else {
+    //             return returnWebJsonResponse('This record is already in the Report', 'error', $report_test);
+    //         }
+
+    //         return $validated;
+    //     } catch (\Exception $e) {
+    //         // return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
+    //         return returnWebJsonResponse($e->getMessage());
+    //     }
+    // }
+
+    public function saveSingleTest(Request $request)
+    {
+        try {
+            // Validate input
+            $validated = $request->validate([
+                'test_id' => 'required|exists:tests,id',
+                'report_id' => 'nullable|exists:reports,id',
             ]);
 
-            // Attach the selected tests to the report
-            $report->tests()->attach($request->test);
+            // Prepare where conditions for checking the existing record
+            $where = [
+                'report_id' => $validated['report_id'],
+                'test_id' => $validated['test_id'],
+            ];
 
-            return redirect()->route('admin.report.view.report', $report->id);
-            // return $report;
+            // Check if the record already exists in the 'report_test' table
+            $existingRecord = DB::table('report_test')->where($where)->first();
+
+            if ($existingRecord) {
+                // If the record exists, return an error response
+                return returnWebJsonResponse('This record is already in the Report', 'error', $existingRecord);
+            } else {
+                // If the record does not exist, create a new one
+                DB::table('report_test')->insert($where);
+
+                $report_test = DB::table('report_test')->where($where)->first();
+
+                // Fetch the newly inserted record
+                $newRecord = Test::find($validated['test_id']);
+                $newRecord['report_test'] = $report_test;
+
+                // Return a success response with a message
+                return returnWebJsonResponse('Test added to Report', 'success', $newRecord);
+            }
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+
+            // Return a JSON response with the error message
+            return returnWebJsonResponse($e->getMessage());
         }
     }
 
@@ -132,11 +213,33 @@ class ReportController extends Controller
     {
         try {
             $report = Report::findOrFail($report_id);
-            // dd(
-            //     $report->toArray(),
-            //     $report->tests->toArray(),
-            // );
-            return view('admin.report.view_report', compact('report'));
+            if ($report) {
+                $category = $report->category;
+                $subCategory = $report->subCategory;
+                $tests = Test::where([
+                    'category_id' => $category->id,
+                    'sub_category_id' => $category->id,
+                ])->get();
+                $report_tests = $report->tests->pluck('id')->toArray();
+                // dd(
+                //     $report->toArray(),
+                //     $category->toArray(),
+                //     $tests->toArray(),
+                //     $report_tests,
+                // );
+                return view(
+                    'admin.report.view_report',
+                    compact(
+                        'report',
+                        'category',
+                        'subCategory',
+                        'tests',
+                        'report_tests',
+                    )
+                );
+            } else {
+                return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
+            }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
             // return returnWebJsonResponse($e->getMessage());

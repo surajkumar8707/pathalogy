@@ -48,6 +48,7 @@
 
     @vite(['resources/sass/app.scss'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @stack('styles')
 </head>
 
@@ -109,6 +110,7 @@
     <script src="{{ public_asset('assets/admin/js/dashboards-analytics.js') }}"></script>
     {{-- <script rel="stylesheet" href="{{ public_asset('build/assets/app-Bg1aHGgo.js') }}"></script> --}}
     <script rel="stylesheet" href="{{ public_asset('build/assets/app-BU-axLcQ.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     @vite(['resources/js/app.js'])
 
@@ -117,6 +119,9 @@
 
     {{-- custom script --}}
     <script>
+        const csrfToken = '{{ csrf_token() }}';
+        const baase_url = '{{ url('') }}';
+
         document.addEventListener('DOMContentLoaded', function() {
             const profileComponents = document.querySelectorAll('.student_profile_pic, .student_sign_pic');
 
@@ -141,7 +146,69 @@
                 }
             });
         });
+
+        // function ajaxRequest(url, data, method = 'GET', headers, callback) {
+        //     $.ajax({
+        //         url: url,
+        //         type: 'POST',
+        //         headers: headers,
+        //         data: data,
+        //         success: function(response) {
+        //             console.log(response);
+
+        //             if (response.status == 'success') {
+        //                 toastr.success(response.message, 'Success !', );
+        //                 displaySpan.text(response.data.lower_value);
+        //             } else {
+        //                 toastr.error(response.message, 'Error !', );
+        //             }
+
+        //             // if (response.success) {
+        //             //     displaySpan.text(newValue);
+        //             // } else {
+        //             //     alert('Error: ' + response.message);
+        //             // }
+        //         },
+        //         error: function(xhr) {
+        //             console.error('Error:', xhr.responseText);
+        //             alert('An error occurred while saving the data.');
+        //         },
+        //         complete: function() {
+        //             displaySpan.removeClass('d-none');
+        //             input.addClass('d-none');
+        //         }
+        //     });
+        // }
+
+        function ajaxRequest(url, data, method = 'GET', headers, callback) {
+            $.ajax({
+                url: url,
+                type: method,
+                headers: headers,
+                data: data,
+                success: function(response) {
+                    console.log(response);
+
+                    if (response.status == 'success') {
+                        toastr.success(response.message, 'Success!');
+                    }
+                    if (response.status == 'error') {
+                        toastr.error(response.message, 'Error!');
+                    }
+                    // Call the callback function with the response
+                    if (callback) {
+                        callback(response);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error:', xhr.responseText);
+                    alert(xhr.responseText);
+                },
+                complete: function() {}
+            });
+        }
     </script>
+
 
     @stack('scripts')
 
