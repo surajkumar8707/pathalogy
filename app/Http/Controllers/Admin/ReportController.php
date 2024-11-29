@@ -216,6 +216,7 @@ class ReportController extends Controller
             if ($report) {
                 $category = $report->category;
                 $subCategory = $report->subCategory;
+                $subCategories = SubCategory::where('category_id', $report->category->id)->get();
                 $tests = Test::where([
                     'category_id' => $category->id,
                     'sub_category_id' => $category->id,
@@ -227,16 +228,7 @@ class ReportController extends Controller
                 //     $tests->toArray(),
                 //     $report_tests,
                 // );
-                return view(
-                    'admin.report.view_report',
-                    compact(
-                        'report',
-                        'category',
-                        'subCategory',
-                        'tests',
-                        'report_tests',
-                    )
-                );
+                return view('admin.report.view_report',compact('report','category','subCategory','tests','report_tests', 'subCategories'));
             } else {
                 return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
             }

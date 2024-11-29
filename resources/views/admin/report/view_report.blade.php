@@ -35,11 +35,24 @@
                                         <div class="mb-1">
                                             <strong>Category : </strong> {{ $report->category->name }}
                                         </div>
-                                        <div class="mb-1">
+                                        {{-- <div class="mb-1">
                                             <strong>Sub Category : </strong> {{ $report->subCategory->name }}
-                                        </div>
+                                        </div> --}}
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-1">
+                                        <div class="form-group mb-2">
+                                            <label for="showCategory">Category</label>
+                                            <select class="form-select" data-report_id="{{ $report->id }}"
+                                                name="showCategory[]" aria-label="Multiple select example" id="showCategory">
+                                                <option disabled selected value="">-- Select Category</option>
+                                                @foreach ($subCategories as $category)
+                                                    <option @selected($report->subCategory->id == $category->id) value="{{ $category->id }}">{{ $category->name }}</option>
+                                                    {{-- @if (!in_array($test->id, $report_tests))
+                                                    @endif --}}
+                                                @endforeach
+                                            </select>
+                                        </div>
+
                                         <div class="form-group">
                                             <label for="showTests">Tests</label>
                                             <select class="form-select" data-report_id="{{ $report->id }}" multiple_
@@ -81,8 +94,8 @@
                                                     value="{{ $test->pivot->lower_value ?? '' }}">
                                             </td> --}}
                                             <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
-                                                <span class="display">{{ $test->pivot->lower_value ?? 'N/A' }}</span>
-                                                <input class="edit-input form-control d-none" type="number"
+                                                {{-- <span class="display">{{ $test->pivot->lower_value ?? 'N/A' }}</span> --}}
+                                                <input class="edit-input form-control d-none_" type="number"
                                                     value="{{ $test->pivot->lower_value ?? '' }}">
                                             </td>
                                         </tr>
@@ -104,162 +117,9 @@
 @endsection
 
 @push('scripts')
-    {{-- <!-- Script -->
-    <script>
-        $('#showTests').select2();
-        // $("#showTests").on('change', function() {
-        //     let $this = $(this);
-        //     let new_test_id = $this.val();
-        //     let current_ids = $this.data('current_id');
-
-        //     let headers: {
-        //         'X-CSRF-TOKEN': csrfToken
-        //     };
-        //     ajaxRequest();
-        // });
-
-        $("#showTests").on('change', function() {
-            let $this = $(this);
-            let test_id = $this.val();
-            let report_id = $this.data('report_id');
-
-            let headers = {
-                'X-CSRF-TOKEN': csrfToken
-            };
-
-            let data = {
-                _token: csrfToken, // or however you're sending your data
-                test_id: test_id, // or however you're sending your data
-                report_id: report_id
-            };
-
-            // console.log(data);
-
-
-            // return false;
-
-            // Use the ajaxRequest function and pass a callback to handle the response
-            ajaxRequest("{{ route('admin.report.save.single.test') }}", data, 'POST', headers, function(response) {
-                // Handle the response here
-                console.log('Response from server:', response);
-                // if (response.status === 'success') {
-                //     // Process the success case
-                // } else {
-                //     // Handle the error case
-                // }
-                if (response.status === 'success') {
-                    // On success, append the new test record to the table
-                    let newTest = response.data; // Assuming the new test data is in response.data
-
-                    // Create the new row HTML dynamically
-                    let newRow = `
-                        <tr>
-                            <td>${newTest.id}</td>
-                            <td>${newTest.name}</td>
-                            <td>${newTest.upper_value}</td>
-                            <td>${newTest.percent || 'N/A'}</td>
-                            <td class="editable-lower-value" data-report_testid="${newTest.id}">
-                                <span class="display">N/A</span>
-                                <input class="edit-input form-control d-none" type="number" value="">
-                            </td>
-                        </tr>
-                    `;
-
-                    // Append the new row to the table body
-                    $('table tbody').append(newRow);
-
-                    // Optional: You can also display a success message using toastr
-                    toastr.success('Test added to the report successfully!', 'Success!');
-                }
-            });
-        });
-
-        $('.edit-input').on('keypress', function(event) {
-            if (event.key === 'Enter') {
-                const input = $(this);
-                const cell = input.closest('.editable-lower-value');
-                const report_testid = cell.data('report_testid');
-                // const testId = cell.data('test-id');
-                const newValue = input.val();
-                const displaySpan = cell.find('.display');
-
-                // AJAX request to save the updated value
-                $.ajax({
-                    url: '{{ route('admin.report.update.lower.value') }}',
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    data: {
-                        _token: csrfToken,
-                        report_test: report_testid,
-                        lower_value: newValue
-                    },
-                    success: function(response) {
-                        console.log(response);
-
-                        if (response.status == 'success') {
-                            toastr.success(response.message, 'Success !', );
-                            displaySpan.text(response.data.lower_value);
-                        } else {
-                            toastr.error(response.message, 'Error !', );
-                        }
-
-                        // if (response.success) {
-                        //     displaySpan.text(newValue);
-                        // } else {
-                        //     alert('Error: ' + response.message);
-                        // }
-                    },
-                    error: function(xhr) {
-                        console.error('Error:', xhr.responseText);
-                        alert('An error occurred while saving the data.');
-                    },
-                    complete: function() {
-                        displaySpan.removeClass('d-none');
-                        input.addClass('d-none');
-                    }
-                });
-            }
-        });
-
-        // Handle cancel on blur
-        $('.edit-input').on('blur', function() {
-            const input = $(this);
-            const displaySpan = input.siblings('.display');
-
-            input.addClass('d-none');
-            displaySpan.removeClass('d-none');
-        });
-
-        $('.editable-lower-value').on('dblclick', function() {
-            const cell = $(this);
-            const displaySpan = cell.find('.display');
-            const input = cell.find('.edit-input');
-
-            displaySpan.addClass('d-none');
-            input.removeClass('d-none').focus();
-        });
-
-        // $("#showTests").on('change', function() {
-        //     let $this = $(this);
-        //     let selectedOptions = $this.find('option:selected');
-
-        //     selectedOptions.each(function() {
-        //         let test_id = $(this).val(); // Value of the selected option
-        //         let current_id = $(this).data('current_id'); // Data attribute of the selected option
-
-        //         alert('Selected Test ID: ' + test_id);
-        //         alert('Current ID: ' + current_id);
-        //     });
-        // });
-        $(document).ready(function() {
-
-        });
-    </script> --}}
 
     <script>
-        $('#showTests').select2();
+        $('#showTests,#showCategory').select2();
         // When the "Tests" select changes
         $("#showTests").on('change', function() {
             let $this = $(this);
@@ -347,8 +207,8 @@
                         alert('An error occurred while saving the data.');
                     },
                     complete: function() {
-                        displaySpan.removeClass('d-none');
-                        input.addClass('d-none');
+                        // displaySpan.removeClass('d-none');
+                        // input.addClass('d-none');
                     }
                 });
             }
