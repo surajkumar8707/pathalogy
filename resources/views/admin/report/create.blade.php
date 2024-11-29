@@ -92,14 +92,9 @@
     <!-- / Content -->
 @endsection
 
-@push('styles')
-    <link href="
-https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css
-" rel="stylesheet">
-@endpush
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
+    {{-- <script>
+        $("#category,#sub_category,#test").select2();
         $(document).ready(function() {
             $('#category').change(function() {
                 let $this = $(this);
@@ -183,5 +178,91 @@ https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css
                 // alert(category_id);
             });
         });
+    </script> --}}
+    <script>
+        // Initialize select2 on the category, sub_category, and test selects
+        $("#category, #sub_category, #test").select2();
+        // $(document).ready(function() {
+
+
+            // Handle category change
+            $('#category').on('change', function() {
+                let category_id = $(this).val();
+
+                if (!category_id) {
+                    return; // Do nothing if no category is selected
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.report.fetch.subcategory') }}",
+                    data: {
+                        category_id: category_id,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.status === "success") {
+                            let sub_category = $("#sub_category");
+                            sub_category.html(
+                                '<option value="">-- Select Sub Category --</option>'
+                                ); // Clear previous options
+
+                            // Populate subcategories
+                            response.data.forEach(function(item) {
+                                sub_category.append(new Option(item.name, item.id));
+                            });
+
+                            // Reinitialize select2 for subcategory after updating options
+                            sub_category.select2();
+                        } else {
+                            toastr.error(response.message, "Error !");
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error(xhr, textStatus, errorThrown);
+                        toastr.error(errorThrown, textStatus);
+                    }
+                });
+            });
+
+            // Handle sub_category change
+            $('#sub_category').on('change', function() {
+                let sub_category_id = $(this).val();
+
+                if (!sub_category_id) {
+                    return; // Do nothing if no sub_category is selected
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.report.fetch.test') }}",
+                    data: {
+                        sub_category_id: sub_category_id,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.status === "success") {
+                            let test = $("#test");
+                            test.html(
+                            '<option value="">-- Select Test --</option>'); // Clear previous options
+
+                            // Populate tests
+                            response.data.forEach(function(item) {
+                                test.append(new Option(item.name, item.id));
+                            });
+
+                            // Reinitialize select2 for tests after updating options
+                            test.select2();
+                        } else {
+                            toastr.error(response.message, "Error !");
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error(xhr, textStatus, errorThrown);
+                        toastr.error(errorThrown, textStatus);
+                    }
+                });
+            });
+        // });
     </script>
 @endpush

@@ -43,10 +43,12 @@
                                         <div class="form-group mb-2">
                                             <label for="showCategory">Category</label>
                                             <select class="form-select" data-report_id="{{ $report->id }}"
-                                                name="showCategory[]" aria-label="Multiple select example" id="showCategory">
+                                                name="showCategory[]" aria-label="Multiple select example"
+                                                id="showCategory">
                                                 <option disabled selected value="">-- Select Category</option>
                                                 @foreach ($subCategories as $category)
-                                                    <option @selected($report->subCategory->id == $category->id) value="{{ $category->id }}">{{ $category->name }}</option>
+                                                    <option @selected($report->subCategory->id == $category->id) value="{{ $category->id }}">
+                                                        {{ $category->name }}</option>
                                                     {{-- @if (!in_array($test->id, $report_tests))
                                                     @endif --}}
                                                 @endforeach
@@ -93,11 +95,24 @@
                                                 <input class="edit-input form-control d-none" type="number"
                                                     value="{{ $test->pivot->lower_value ?? '' }}">
                                             </td> --}}
-                                            <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
-                                                {{-- <span class="display">{{ $test->pivot->lower_value ?? 'N/A' }}</span> --}}
+                                            {{-- <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
                                                 <input class="edit-input form-control d-none_" type="number"
                                                     value="{{ $test->pivot->lower_value ?? '' }}">
+                                            </td> --}}
+                                            <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
+                                                <div class="row">
+                                                    <div class="col-md-9">
+                                                        <input class="edit-input form-control" type="number"
+                                                            value="{{ $test->pivot->lower_value ?? '' }}">
+                                                    </div>
+                                                    <div class="col-md-3 pt-1">
+                                                        <button
+                                                            class="btn btn-sm btn-primary save-lower-value-btn">Save</button>
+                                                    </div>
+                                                </div>
+
                                             </td>
+
                                         </tr>
                                     @empty
                                     @endforelse
@@ -117,10 +132,48 @@
 @endsection
 
 @push('scripts')
-
     <script>
         $('#showTests,#showCategory').select2();
         // When the "Tests" select changes
+
+        // Handle change in the sub-category dropdown (to fetch related tests)
+        $('#showCategory').on('change', function() {
+            let subCategory_id = $(this).val(); // Get the selected sub-category ID
+
+            // Ensure a sub-category is selected
+            if (!subCategory_id) {
+                return; // Exit if no sub-category is selected
+            }
+
+            // Make AJAX request to get tests related to the selected sub-category
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('admin.report.fetch.test') }}', // Adjust the URL as per your routing
+                data: {
+                    sub_category_id: subCategory_id,
+                    _token: csrfToken
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        let testDropdown = $('#showTests');
+                        let testOptions = '<option value="">-- Select Test --</option>';
+
+                        // Loop through tests and add them to the select dropdown
+                        response.data.forEach(function(item) {
+                            testOptions += `<option value="${item.id}">${item.name}</option>`;
+                        });
+
+                        // Update the tests select dropdown and reinitialize select2
+                        testDropdown.html(testOptions).select2();
+                    } else {
+                        toastr.error(response.message, 'Error!');
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    toastr.error(errorThrown, 'Error');
+                }
+            });
+        });
         $("#showTests").on('change', function() {
             let $this = $(this);
             let test_ids = $this.val(); // Get selected test IDs
@@ -146,21 +199,62 @@
                         // Create the new row HTML dynamically
                         let newRow = `
                             <tr>
-                                <td>${newTest.id}</td>
-                                <td>${newTest.name}</td>
-                                <td>${newTest.upper_value}</td>
-                                <td>${newTest.percent || 'N/A'}</td>
-                                <td class="editable-lower-value" data-report_testid="${newTest.report_test.id}">
-                                    <span class="display">N/A</span>
-                                    <input class="edit-input form-control d-none" type="number" value="">
-                                </td>
-                            </tr>
+                        <td>${newTest.id}</td>
+                        <td>${newTest.name}</td>
+                        <td>${newTest.upper_value}</td>
+                        <td>${newTest.percent || 'N/A'}</td>
+                        <td class="editable-lower-value" data-report_testid="${newTest.report_test.id}">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <input class="edit-input form-control" type="number" value="">
+                                </div>
+                                <div class="col-md-3 pt-1">
+                                    <button class="btn btn-sm btn-primary save-lower-value-btn">Save</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                         `;
 
                         // Append the new row to the table body
                         $('table tbody').append(newRow);
                     }
                 });
+        });
+
+        // Handle the saving of the "lower value"
+        $('table').on('click', '.save-lower-value-btn', function() {
+            const cell = $(this).closest('td');
+            const input = cell.find('.edit-input');
+            const report_testid = cell.data('report_testid');
+            const newValue = input.val();
+            const displaySpan = cell.find('.display');
+
+            // Make AJAX request to save the updated value
+            $.ajax({
+                url: '{{ route('admin.report.update.lower.value') }}',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                data: {
+                    _token: csrfToken,
+                    report_test: report_testid,
+                    lower_value: newValue
+                },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        toastr.success(response.message, 'Success');
+                        displaySpan.text(response.data.lower_value); // Update the display text
+                    } else {
+                        toastr.error(response.message, 'Error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error:', xhr.responseText);
+                    alert('An error occurred while saving the data.');
+                }
+            });
         });
 
         // Delegate the 'dblclick' event to the 'editable-lower-value' cells
@@ -214,14 +308,14 @@
             }
         });
 
-        // Handle cancel on blur (when the input loses focus)
-        $('table').on('blur', '.edit-input', function() {
-            const input = $(this);
-            const displaySpan = input.siblings('.display');
+        // // Handle cancel on blur (when the input loses focus)
+        // $('table').on('blur', '.edit-input', function() {
+        //     const input = $(this);
+        //     const displaySpan = input.siblings('.display');
 
-            input.addClass('d-none');
-            displaySpan.removeClass('d-none');
-        });
+        //     input.addClass('d-none');
+        //     displaySpan.removeClass('d-none');
+        // });
 
         // (Optional) Handle cancel on Escape key press
         $('table').on('keydown', '.edit-input', function(event) {
