@@ -71,53 +71,56 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table table-bordered table-striped mb-3">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Test</th>
-                                        <th>Upper Value</th>
-                                        <th>Percent</th>
-                                        <th>Lower value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($report->tests as $test)
-                                        {{-- @dd($test->toArray(), $test->pivot->report_id, $test->pivot->lower_value) --}}
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped mb-3">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $test->name }}</td>
-                                            <td>{{ $test->upper_value }}</td>
-                                            <td>{{ $test->percent ?? 'N/A' }}</td>
-                                            {{-- <td>{{ $test->pivot->lower_value ?? 'N/A' }}</td> --}}
-                                            {{-- <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
-                                                <span class="display">{{ $test->pivot->lower_value ?? 'N/A' }}</span>
-                                                <input class="edit-input form-control d-none" type="number"
-                                                    value="{{ $test->pivot->lower_value ?? '' }}">
-                                            </td> --}}
-                                            {{-- <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
-                                                <input class="edit-input form-control d-none_" type="number"
-                                                    value="{{ $test->pivot->lower_value ?? '' }}">
-                                            </td> --}}
-                                            <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
-                                                <div class="row">
-                                                    <div class="col-md-9">
-                                                        <input class="edit-input form-control" type="number"
-                                                            value="{{ $test->pivot->lower_value ?? '' }}">
-                                                    </div>
-                                                    <div class="col-md-3 pt-1">
-                                                        <button
-                                                            class="btn btn-sm btn-primary save-lower-value-btn">Save</button>
-                                                    </div>
-                                                </div>
-
-                                            </td>
-
+                                            <th>ID</th>
+                                            <th>Test</th>
+                                            <th>Upper Value</th>
+                                            <th>Percent</th>
+                                            <th>Lower value</th>
                                         </tr>
-                                    @empty
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($report->tests as $test)
+                                            {{-- @dd($test->toArray(), $test->pivot->report_id, $test->pivot->lower_value) --}}
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $test->name }}</td>
+                                                <td>{{ $test->upper_value }}</td>
+                                                <td>{{ $test->percent ?? 'N/A' }}</td>
+                                                {{-- <td>{{ $test->pivot->lower_value ?? 'N/A' }}</td> --}}
+                                                {{-- <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
+                                                    <span class="display">{{ $test->pivot->lower_value ?? 'N/A' }}</span>
+                                                    <input class="edit-input form-control d-none" type="number"
+                                                        value="{{ $test->pivot->lower_value ?? '' }}">
+                                                </td> --}}
+                                                {{-- <td class="editable-lower-value" data-report_testid="{{ $test->pivot->id }}">
+                                                    <input class="edit-input form-control d-none_" type="number"
+                                                        value="{{ $test->pivot->lower_value ?? '' }}">
+                                                </td> --}}
+                                                <td class="editable-lower-value"
+                                                    data-report_testid="{{ $test->pivot->id }}">
+                                                    <div class="row">
+                                                        <div class="col-md-9">
+                                                            <input class="edit-input form-control" type="number"
+                                                                value="{{ $test->pivot->lower_value ?? '' }}">
+                                                        </div>
+                                                        <div class="col-md-3 pt-1">
+                                                            <button
+                                                                class="btn btn-sm btn-primary save-lower-value-btn">Save</button>
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
+                                        @empty
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="form-group">
                                 <a href="{{ route('admin.report.generate.report', $report->id) }}"
                                     class="btn btn-outline-primary">Generate Report</a>
