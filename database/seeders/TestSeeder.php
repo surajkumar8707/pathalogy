@@ -112,6 +112,13 @@ class TestSeeder extends Seeder
                 'upper_value' => number_format(rand(10,99),2),
                 'percent' => rand(10,50),
             ],
+            [
+                'category_id' => 1,
+                'sub_category_id' => 2,
+                'name' => 'CRP (Quantitative)',
+                'upper_value' => number_format(rand(10,99),2),
+                'percent' => rand(10,50),
+            ],
         ];
 
         foreach($tests as $key => $test){

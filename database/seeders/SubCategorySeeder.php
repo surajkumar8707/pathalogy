@@ -18,6 +18,10 @@ class SubCategorySeeder extends Seeder
                 'category_id' => 1,
                 'name' => 'CBC (Complete Blood Test)',
             ],
+            [
+                'category_id' => 1,
+                'name' => 'Serology',
+            ],
         ];
 
         foreach($subcategories as $key => $subcategory){
