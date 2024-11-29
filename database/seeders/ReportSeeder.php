@@ -14,6 +14,7 @@ class ReportSeeder extends Seeder
      */
     public function run(): void
     {
+
         // Disable foreign key checks temporarily
         DB::statement('SET foreign_key_checks = 0');
 
