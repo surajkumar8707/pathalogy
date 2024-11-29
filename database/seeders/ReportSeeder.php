@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Report;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ReportSeeder extends Seeder
@@ -13,8 +14,14 @@ class ReportSeeder extends Seeder
      */
     public function run(): void
     {
+        // Disable foreign key checks temporarily
+        DB::statement('SET foreign_key_checks = 0');
+
         // Clear existing records
         Report::truncate();
+
+        // Re-enable foreign key checks
+        DB::statement('SET foreign_key_checks = 1');
 
         $report = Report::create([
             'category_id' => 1,

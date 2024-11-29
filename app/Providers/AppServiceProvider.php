@@ -24,6 +24,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
         Builder::useVite();
-        Schema::defaultStringLength(191);
+        // Schema::defaultStringLength(191);
     }
 }
