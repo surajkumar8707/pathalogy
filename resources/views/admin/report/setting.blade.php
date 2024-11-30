@@ -15,6 +15,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
+                                <label for="pathalogy_name">Pathalogy Name:</label>
+                                <input type="text" name="pathalogy_name" class="form-control"
+                                    placeholder="Enter Pathalogy Name"
+                                    value="{{ old('pathalogy_name', $setting->pathalogy_name ?? '') }}" />
+                                @error('pathalogy_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group mb-3">
                                 <label for="address">Address:</label>
                                 <input type="text" name="address" class="form-control" placeholder="Enter Address"
                                     value="{{ old('address', $setting->address ?? '') }}" />

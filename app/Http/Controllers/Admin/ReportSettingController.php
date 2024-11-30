@@ -74,6 +74,7 @@ class ReportSettingController extends Controller
 
         // Validate incoming request
         $request->validate([
+            'pathalogy_name' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'working_hour' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255',

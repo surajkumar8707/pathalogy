@@ -89,17 +89,18 @@
             font-weight: bold;
         }
 
-        #download-btn {
-            background-color: #0073e6;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 20px;
-            display: block;
-            margin: 20px auto;
-            border-radius: 5px;
+        #download-btn,
+        {
+        background-color: #0073e6;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-bottom: 20px;
+        display: inline-block;
+        margin: 20px auto;
+        border-radius: 5px;
         }
 
         #download-btn:hover {
@@ -111,22 +112,69 @@
 <body>
     <div class="container">
         <div class="report-container" id="report">
+            {{-- <header>
+                <h1 class="pathalogy_name">{{ $setting->pathalogy_name }}</h1>
+                <p class="address">{{ $setting->address }}</p>
+                <p class="working_hour">Working Hours: {{ $setting->working_hour }} | Sunday Open</p>
+                <p class="email_phones">Email ID: {{ $setting->email }} | Phones: {{ $setting->phones }}</p>
+            </header> --}}
+
             <header>
-                <h1>ANUBHAV PATHOLOGY LAB</h1>
-                <p>Nala Pani Chowk, Sahastradhara Road, Adjoining Jagdamba Gas Agency, Dehra Dun - 248001</p>
-                <p>Working Hours: 7:00 AM to 8:30 PM | Sunday Open</p>
-                <p>Email ID: anubhavpathologylab@gmail.com | Phones: 8650270860, 8077014570</p>
+                <h1 class="pathalogy_name" ondblclick="editText('pathalogy_name')">{{ $setting->pathalogy_name }}</h1>
+                <p class="address" ondblclick="editText('address')">{{ $setting->address }}</p>
+                <p class="working_hour" ondblclick="editText('working_hour')">Working Hours:
+                    {{ $setting->working_hour }} | Sunday Open</p>
+                <p class="email_phones" ondblclick="editText('email_phones')">Email ID: {{ $setting->email }} | Phones:
+                    {{ $setting->phones }}</p>
             </header>
 
             <section class="patient-info">
-                <p><strong>Date:</strong> 04/10/2024 &nbsp; <strong>Sr No.:</strong> 128</p>
-                <p><strong>Patient ID:</strong> 2410040128 &nbsp; <strong>Age:</strong> 58 Yrs. &nbsp;
-                    <strong>Sex:</strong> M
-                </p>
-                <p><strong>Ref. By:</strong> Self &nbsp; <strong>Name:</strong> Dr. V.S. Kapri</p>
+                <div class="row">
+                    <div class="col-6">
+                        <p><strong>Sr No.:</strong> {{ $report->id }}</p>
+                        <p><strong>Patient Name:</strong> {{ $report->name }}</p>
+                        <p><strong>Age:</strong> {{ $report->age }} Yrs.</p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>Date:</strong> {{ date('d/m/Y') }}</p>
+                        <p><strong>Ref. By:</strong> {{ $report->refer_by_doctor }} &nbsp;</p>
+                    </div>
+                </div>
             </section>
 
-            <section class="test-results">
+            @forelse ($subCategoryData as $subCategory)
+                <section class="test-results">
+                    <h2>{{ $subCategory['name'] }}</h2>
+                    @if (count($subCategory['tests']) > 0)
+                        <table class="table table-bordered_">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Test Name</th>
+                                    <th>Percent</th>
+                                    <th>Upper Value</th>
+                                    <th>Lower Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($subCategory['tests'] as $key => $test)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $test->name }}</td>
+                                        <td>{{ $test->percent }}%</td>
+                                        <td>{{ $test->upper_value }}</td>
+                                        <td>{{ $test->pivot->lower_value }}</td>
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+                        </table>
+                    @endif
+
+                </section>
+            @empty
+            @endforelse
+            {{-- <section class="test-results">
                 <h2>Complete Blood Count (CBC)</h2>
                 <table class="table table-bordered">
                     <thead>
@@ -177,11 +225,11 @@
                         <td>0.0 - 6.0</td>
                     </tr>
                 </table>
-            </section>
+            </section> --}}
 
             <section class="interpretation">
                 <h3>Interpretation</h3>
-                <p>
+                <p class="interpretation_content" ondblclick="editText('interpretation_content')">
                     In normal healthy individuals, CRP levels generally do not exceed 6 mg/L...
                     <!-- Add full interpretation text -->
                 </p>
@@ -193,7 +241,11 @@
         </div>
 
         <!-- Download Button -->
-        <button id="download-btn" class="btn btn-primary">Download PDF</button>
+        <div class="text-center my-4">
+            <button id="download-btn" class="btn btn-primary">Download PDF</button>
+            <a id="back-btn" href="{{ route('admin.report.view.report', $report->id) }}"
+                class="btn btn-secondary d-inline-block">Back</a>
+        </div>
     </div>
 
     <!-- Bootstrap and jsPDF libraries -->
@@ -202,6 +254,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
+        function editText(className) {
+            // Get the element by className
+            const element = document.querySelector(`.${className}`);
+            const currentText = element.textContent || element.innerText;
+
+            // Create an input field with the current text as value
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.classList.add('editable');
+            input.classList.add('form-control');
+
+            // Replace the element with the input field
+            element.innerHTML = '';
+            element.appendChild(input);
+
+            // Focus on the input field
+            input.focus();
+
+            // Add event listener to save the new text when the user clicks outside (on blur)
+            input.addEventListener('blur', function() {
+                // Get the new value from the input field
+                const newText = input.value;
+                // Replace the input field with the new text
+                element.innerHTML = newText;
+            });
+        }
+
         document.getElementById('download-btn').addEventListener('click', async function() {
             const {
                 jsPDF

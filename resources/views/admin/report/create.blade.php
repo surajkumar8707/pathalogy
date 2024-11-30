@@ -16,7 +16,6 @@
             <div class="card-body">
                 <form action="{{ route('admin.report.store') }}" method="POST">
                     @csrf
-
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -185,84 +184,84 @@
         // $(document).ready(function() {
 
 
-            // Handle category change
-            $('#category').on('change', function() {
-                let category_id = $(this).val();
+        // Handle category change
+        $('#category').on('change', function() {
+            let category_id = $(this).val();
 
-                if (!category_id) {
-                    return; // Do nothing if no category is selected
-                }
+            if (!category_id) {
+                return; // Do nothing if no category is selected
+            }
 
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('admin.report.fetch.subcategory') }}",
-                    data: {
-                        category_id: category_id,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        if (response.status === "success") {
-                            let sub_category = $("#sub_category");
-                            sub_category.html(
-                                '<option value="">-- Select Sub Category --</option>'
-                                ); // Clear previous options
+            $.ajax({
+                type: "POST",
+                url: "{{ route('admin.report.fetch.subcategory') }}",
+                data: {
+                    category_id: category_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.status === "success") {
+                        let sub_category = $("#sub_category");
+                        sub_category.html(
+                            '<option value="">-- Select Sub Category --</option>'
+                        ); // Clear previous options
 
-                            // Populate subcategories
-                            response.data.forEach(function(item) {
-                                sub_category.append(new Option(item.name, item.id));
-                            });
+                        // Populate subcategories
+                        response.data.forEach(function(item) {
+                            sub_category.append(new Option(item.name, item.id));
+                        });
 
-                            // Reinitialize select2 for subcategory after updating options
-                            sub_category.select2();
-                        } else {
-                            toastr.error(response.message, "Error !");
-                        }
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.error(xhr, textStatus, errorThrown);
-                        toastr.error(errorThrown, textStatus);
+                        // Reinitialize select2 for subcategory after updating options
+                        sub_category.select2();
+                    } else {
+                        toastr.error(response.message, "Error !");
                     }
-                });
-            });
-
-            // Handle sub_category change
-            $('#sub_category').on('change', function() {
-                let sub_category_id = $(this).val();
-
-                if (!sub_category_id) {
-                    return; // Do nothing if no sub_category is selected
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.error(xhr, textStatus, errorThrown);
+                    toastr.error(errorThrown, textStatus);
                 }
+            });
+        });
 
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('admin.report.fetch.test') }}",
-                    data: {
-                        sub_category_id: sub_category_id,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        if (response.status === "success") {
-                            let test = $("#test");
-                            test.html(
+        // Handle sub_category change
+        $('#sub_category').on('change', function() {
+            let sub_category_id = $(this).val();
+
+            if (!sub_category_id) {
+                return; // Do nothing if no sub_category is selected
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('admin.report.fetch.test') }}",
+                data: {
+                    sub_category_id: sub_category_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.status === "success") {
+                        let test = $("#test");
+                        test.html(
                             '<option value="">-- Select Test --</option>'); // Clear previous options
 
-                            // Populate tests
-                            response.data.forEach(function(item) {
-                                test.append(new Option(item.name, item.id));
-                            });
+                        // Populate tests
+                        response.data.forEach(function(item) {
+                            test.append(new Option(item.name, item.id));
+                        });
 
-                            // Reinitialize select2 for tests after updating options
-                            test.select2();
-                        } else {
-                            toastr.error(response.message, "Error !");
-                        }
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.error(xhr, textStatus, errorThrown);
-                        toastr.error(errorThrown, textStatus);
+                        // Reinitialize select2 for tests after updating options
+                        test.select2();
+                    } else {
+                        toastr.error(response.message, "Error !");
                     }
-                });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.error(xhr, textStatus, errorThrown);
+                    toastr.error(errorThrown, textStatus);
+                }
             });
+        });
         // });
     </script>
 @endpush

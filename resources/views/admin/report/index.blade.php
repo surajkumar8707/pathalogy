@@ -9,7 +9,8 @@
                     <div class="col-md-6">
                         <h3 class="card-title">Report List</h3>
                     </div>
-                    <div class="col-md-6 text-end"> <a href="{{ route('admin.report.create') }}" class="btn btn-primary mb-3">Add Report</a></div>
+                    <div class="col-md-6 text-end"> <a href="{{ route('admin.report.create') }}"
+                            class="btn btn-primary mb-3">Add Report</a></div>
                 </div>
             </div>
             <div class="card-body">
@@ -46,11 +47,19 @@
                                                 {{ $report->refer_by_doctor }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.report.view.report', $report->id) }}" class="btn btn-info btn-sm">View</a>
+                                                <form
+                                                    onsubmit="if(!confirm('Are You sure want to delete ?')){ return false; }"
+                                                    method="POST"
+                                                    action="{{ route('admin.report.destroy', $report->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a href="{{ route('admin.report.view.report', $report->id) }}"
+                                                        class="btn btn-info btn-sm">View</a>
+                                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @empty
-
                                     @endforelse
                                 </tbody>
                             </table>

@@ -12,7 +12,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/admin/img/favicon/favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ public_asset('assets/admin/img/favicon/favicon.ico') }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,27 +22,28 @@
         rel="stylesheet" />
 
     <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ public_asset('assets/admin/vendor/fonts/boxicons.css') }}" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/css/core.css') }}"
+    <link rel="stylesheet" href="{{ public_asset('assets/admin/vendor/css/core.css') }}"
         class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/css/theme-default.css') }}"
+    <link rel="stylesheet" href="{{ public_asset('assets/admin/vendor/css/theme-default.css') }}"
         class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="{{ asset('assets/admin/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ public_asset('assets/admin/css/demo.css') }}" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet"
+        href="{{ public_asset('assets/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
 
     <!-- Page CSS -->
     <!-- Page -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/css/pages/page-misc.css') }}" />
+    <link rel="stylesheet" href="{{ public_asset('assets/admin/vendor/css/pages/page-misc.css') }}" />
     <!-- Helpers -->
-    <script src="{{ asset('assets/admin/vendor/js/helpers.js') }}"></script>
+    <script src="{{ public_asset('assets/admin/vendor/js/helpers.js') }}"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="{{ asset('assets/admin/js/config.js') }}"></script>
+    <script src="{{ public_asset('assets/admin/js/config.js') }}"></script>
 </head>
 
 <body>
@@ -55,7 +56,7 @@
             <p class="mb-4 mx-2">Oops! 😖 The requested URL was not found on this server.</p>
             <a href="{{ url()->previous() }}" class="btn btn-primary">Go Back</a>
             <div class="mt-3">
-                <img src="{{ asset('assets/admin/img/illustrations/page-misc-error-light.png') }}"
+                <img src="{{ public_asset('assets/admin/img/illustrations/page-misc-error-light.png') }}"
                     alt="page-misc-error-light" width="500" class="img-fluid"
                     data-app-dark-img="illustrations/page-misc-error-dark.png"
                     data-app-light-img="illustrations/page-misc-error-light.png" />
@@ -66,25 +67,20 @@
 
     <!-- / Content -->
 
-    <div class="buy-now">
-        <a href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/" target="_blank"
-            class="btn btn-danger btn-buy-now">Upgrade to Pro</a>
-    </div>
-
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
-    <script src="{{ asset('assets/admin/vendor/libs/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('assets/admin/vendor/libs/popper/popper.js') }}"></script>
-    <script src="{{ asset('assets/admin/vendor/js/bootstrap.js') }}"></script>
-    <script src="{{ asset('assets/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ public_asset('assets/admin/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ public_asset('assets/admin/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ public_asset('assets/admin/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ public_asset('assets/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
 
-    <script src="{{ asset('assets/admin/vendor/js/menu.js') }}"></script>
+    <script src="{{ public_asset('assets/admin/vendor/js/menu.js') }}"></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->
 
     <!-- Main JS -->
-    <script src="{{ asset('assets/admin/js/main.js') }}"></script>
+    <script src="{{ public_asset('assets/admin/js/main.js') }}"></script>
 
     <!-- Page JS -->
 

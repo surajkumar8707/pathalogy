@@ -23,6 +23,7 @@ class Test extends Model
 
     public function reports()
     {
-        return $this->belongsToMany(Report::class, 'report_test');
+        return $this->belongsToMany(Report::class, 'report_test')->withPivot('id', 'category_id', 'sub_category_id', 'lower_value') // Include pivot table fields
+            ->withTimestamps();
     }
 }

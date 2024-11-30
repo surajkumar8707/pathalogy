@@ -16,6 +16,7 @@ class ReportSettingSeeder extends Seeder
         ReportSetting::truncate();
 
         ReportSetting::create([
+            "pathalogy_name" => "ANUBHAV PATHOLOGY LAB",
             "address" => "Nala Pani Chowk, Sahastradhara Road, Adjoining Jagdamba Gas Agency, Dehra Dun - 248001",
             "working_hour" => "7:00 AM to 8:30 PM",
             "email" => "anubhavpathologylab@gmail.com",

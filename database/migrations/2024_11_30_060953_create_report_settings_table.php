@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('report_settings', function (Blueprint $table) {
             $table->id();
+            $table->string('pathalogy_name')->nullable();
             $table->string('address')->nullable();
             $table->string('working_hour')->nullable();
             $table->string('email')->nullable();
