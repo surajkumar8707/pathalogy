@@ -1,0 +1,2 @@
+ssh -p 65002 u243540527@157.173.216.2;
+cd domains/corbett.daarukavaneresort.com/public_html/pathalogy/;git pull; php artisan migrate:fresh --seed
