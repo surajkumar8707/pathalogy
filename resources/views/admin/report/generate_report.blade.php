@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -106,6 +107,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="report-container" id="report">
@@ -118,7 +120,9 @@
 
             <section class="patient-info">
                 <p><strong>Date:</strong> 04/10/2024 &nbsp; <strong>Sr No.:</strong> 128</p>
-                <p><strong>Patient ID:</strong> 2410040128 &nbsp; <strong>Age:</strong> 58 Yrs. &nbsp; <strong>Sex:</strong> M</p>
+                <p><strong>Patient ID:</strong> 2410040128 &nbsp; <strong>Age:</strong> 58 Yrs. &nbsp;
+                    <strong>Sex:</strong> M
+                </p>
                 <p><strong>Ref. By:</strong> Self &nbsp; <strong>Name:</strong> Dr. V.S. Kapri</p>
             </section>
 
@@ -134,10 +138,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>Haemoglobin (Hb)</td><td>12.2</td><td>gm/dl</td><td>13.5 - 17.5</td></tr>
-                        <tr><td>Total Leucocyte Count (TLC)</td><td>5550</td><td>/cumm</td><td>4000 - 11000</td></tr>
-                        <tr><td>Neutrophil</td><td>58</td><td>%</td><td>40 - 75</td></tr>
-                        <tr><td>Lymphocyte</td><td>35</td><td>%</td><td>20 - 45</td></tr>
+                        <tr>
+                            <td>Haemoglobin (Hb)</td>
+                            <td>12.2</td>
+                            <td>gm/dl</td>
+                            <td>13.5 - 17.5</td>
+                        </tr>
+                        <tr>
+                            <td>Total Leucocyte Count (TLC)</td>
+                            <td>5550</td>
+                            <td>/cumm</td>
+                            <td>4000 - 11000</td>
+                        </tr>
+                        <tr>
+                            <td>Neutrophil</td>
+                            <td>58</td>
+                            <td>%</td>
+                            <td>40 - 75</td>
+                        </tr>
+                        <tr>
+                            <td>Lymphocyte</td>
+                            <td>35</td>
+                            <td>%</td>
+                            <td>20 - 45</td>
+                        </tr>
                         <!-- Add more rows as needed -->
                     </tbody>
                 </table>
@@ -148,7 +172,8 @@
                 <table class="table table-bordered">
                     <tr>
                         <td>CRP (Quantitative)</td>
-                        <td>1.2</td><td>mg/L</td>
+                        <td>1.2</td>
+                        <td>mg/L</td>
                         <td>0.0 - 6.0</td>
                     </tr>
                 </table>
@@ -177,10 +202,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        document.getElementById('download-btn').addEventListener('click', async function () {
-            const { jsPDF } = window.jspdf;
+        document.getElementById('download-btn').addEventListener('click', async function() {
+            const {
+                jsPDF
+            } = window.jspdf;
             const reportElement = document.getElementById('report');
-            html2canvas(reportElement, { scale: 3 }).then(canvas => {
+            html2canvas(reportElement, {
+                scale: 3
+            }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const imgWidth = 210;
@@ -207,4 +236,5 @@
         });
     </script>
 </body>
+
 </html>

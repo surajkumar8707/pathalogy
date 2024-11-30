@@ -125,7 +125,7 @@
                                         <tr>
                                             <th colspan="6">
                                                 <div class="text-right text-end">
-                                                    <button class="btn btn-primary">Save All</button>
+                                                    <button class="btn btn-primary save-all-lower-value">Save All</button>
                                                 </div>
                                             </th>
                                         </tr>
@@ -273,7 +273,7 @@
         });
 
         // Handle the "Save All" button click
-        $('table').on('click', '.btn-primary', function() {
+        $('table').on('click', '.save-all-lower-value', function() {
             // Initialize an array to collect the data
             let lowerValuesData = [];
 
@@ -311,11 +311,14 @@
                     if (response.status === 'success') {
                         toastr.success(response.message, 'Success');
                         // Optionally, update the displayed values in the table if needed
-                        lowerValuesData.forEach(function(item) {
-                            // Update the display value in the table
-                            $(`[data-report_testid="${item.report_test}"] .display`).text(item
-                                .lower_value);
-                        });
+                        // lowerValuesData.forEach(function(item) {
+                        //     // Update the display value in the table
+                        //     $(`[data-report_testid="${item.report_test}"] .display`).text(item
+                        //         .lower_value);
+                        // });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
                     } else {
                         toastr.error(response.message, 'Error');
                     }

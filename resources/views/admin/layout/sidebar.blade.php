@@ -131,6 +131,12 @@
             </a>
         </li> --}}
 
+        <li class="menu-item {{ isActiveRoute(['admin.report.setting']) }}">
+            <a href="{{ route('admin.report.setting') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div data-i18n="Analytics">Report Setting</div>
+            </a>
+        </li>
         <li class="menu-item {{ isActiveRoute(['admin.setting']) }}">
             <a href="{{ route('admin.setting') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-cog"></i>

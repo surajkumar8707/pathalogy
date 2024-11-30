@@ -18,9 +18,10 @@ class DatabaseSeeder extends Seeder
             SubCategorySeeder::class,
             TestSeeder::class,
             ReportSeeder::class,
+            SettingSeeder::class,
+            ReportSettingSeeder::class,
             // ContactSeeder::class,
             // HomePageCarouselSeeder::class,
-            // SettingSeeder::class,
             // SocialMediaLinkSeeder::class,
             // RoomSeeder::class,
         ]);

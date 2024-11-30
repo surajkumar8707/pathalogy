@@ -279,17 +279,22 @@ class ReportController extends Controller
     public function saveAllLowerValues(Request $request)
     {
         $lowerValues = $request->input('lower_values');
+        $all_report_test_ids = array_column($lowerValues, 'report_test');
+        // dd($lowerValues, $all_report_test_ids);
 
-        foreach ($lowerValues as $item) {
-            // Find the report_test by ID and update the lower value
-            $reportTest = ReportTest::findOrFail($item['report_test']);
-            $reportTest->lower_value = $item['lower_value'];
-            $reportTest->save();
+        try {
+            foreach ($lowerValues as $item) {
+                // Find the report_test by ID and update the lower value
+                DB::table('report_test')->where('id', $item['report_test'])->update(['lower_value' => $item['lower_value']]);
+                // $reportTest = ReportTest::findOrFail($item['report_test']);
+                // $reportTest->lower_value = $item['lower_value'];
+                // $reportTest->save();
+            }
+            $all_report_test = DB::table('report_test')->whereIn('id', $all_report_test_ids)->get();
+            return returnWebJsonResponse('All lower values updated successfully.', 'success', $all_report_test);
+            // return response()->json(['success' => true, 'message' => 'Lower value updated successfully.']);
+        } catch (\Exception $e) {
+            return returnWebJsonResponse($e->getMessage());
         }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'All lower values updated successfully.',
-        ]);
     }
 }

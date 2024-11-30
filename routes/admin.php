@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\ReportSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,4 +79,6 @@ Route::middleware('role:admin')->group(function () {
         Route::post('/update-lower-value', [ReportController::class, 'updateLowerValue'])->name('update.lower.value');
         Route::post('save/all/lower/values', [ReportController::class, 'saveAllLowerValues'])->name('save.all.lower.values');
     });
+    Route::get('/report-setting', [ReportSettingController::class, 'index'])->name('report.setting');
+    Route::post('/report-setting/settings/update/{id}', [ReportSettingController::class, 'settingUpdate'])->name('report.setting.update');
 });
