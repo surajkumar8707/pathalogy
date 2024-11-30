@@ -121,6 +121,15 @@
                                         @empty
                                         @endforelse
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="6">
+                                                <div class="text-right text-end">
+                                                    <button class="btn btn-primary">Save All</button>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                             <div class="form-group">
@@ -259,6 +268,60 @@
                 error: function(xhr) {
                     console.error('Error:', xhr.responseText);
                     alert('An error occurred while saving the data.');
+                }
+            });
+        });
+
+        // Handle the "Save All" button click
+        $('table').on('click', '.btn-primary', function() {
+            // Initialize an array to collect the data
+            let lowerValuesData = [];
+
+            // Loop through each input field with class '.edit-input' to gather updated lower values
+            $('.edit-input').each(function() {
+                const input = $(this);
+                const report_testid = input.closest('.editable-lower-value').data('report_testid');
+                const newValue = input.val();
+
+                // Push the data into the array
+                lowerValuesData.push({
+                    report_test: report_testid,
+                    lower_value: newValue
+                });
+            });
+
+            // If there are no values to save, show a message and return
+            if (lowerValuesData.length === 0) {
+                toastr.info("No changes to save.", 'Info');
+                return;
+            }
+
+            // Make AJAX request to save all the updated lower values
+            $.ajax({
+                url: '{{ route('admin.report.save.all.lower.values') }}', // Adjust the route as per your backend
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                data: {
+                    _token: csrfToken,
+                    lower_values: lowerValuesData // Send the collected data
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        toastr.success(response.message, 'Success');
+                        // Optionally, update the displayed values in the table if needed
+                        lowerValuesData.forEach(function(item) {
+                            // Update the display value in the table
+                            $(`[data-report_testid="${item.report_test}"] .display`).text(item
+                                .lower_value);
+                        });
+                    } else {
+                        toastr.error(response.message, 'Error');
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    toastr.error(errorThrown, 'Error');
                 }
             });
         });

@@ -76,5 +76,6 @@ Route::middleware('role:admin')->group(function () {
         Route::post('/fetch-test', [ReportController::class, 'fetchTest'])->name('fetch.test');
         Route::get('/view/{report_id}', [ReportController::class, 'viewReport'])->name('view.report');
         Route::post('/update-lower-value', [ReportController::class, 'updateLowerValue'])->name('update.lower.value');
+        Route::post('save/all/lower/values', [ReportController::class, 'saveAllLowerValues'])->name('save.all.lower.values');
     });
 });

@@ -244,7 +244,7 @@ class ReportController extends Controller
                 //     $tests->toArray(),
                 //     $report_tests,
                 // );
-                return view('admin.report.view_report',compact('report','category','subCategory','tests','report_tests', 'subCategories'));
+                return view('admin.report.view_report', compact('report', 'category', 'subCategory', 'tests', 'report_tests', 'subCategories'));
             } else {
                 return redirect()->back()->with('error', 'Report not found with id ' . $report_id);
             }
@@ -274,5 +274,22 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return returnWebJsonResponse($e->getMessage());
         }
+    }
+
+    public function saveAllLowerValues(Request $request)
+    {
+        $lowerValues = $request->input('lower_values');
+
+        foreach ($lowerValues as $item) {
+            // Find the report_test by ID and update the lower value
+            $reportTest = ReportTest::findOrFail($item['report_test']);
+            $reportTest->lower_value = $item['lower_value'];
+            $reportTest->save();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'All lower values updated successfully.',
+        ]);
     }
 }
