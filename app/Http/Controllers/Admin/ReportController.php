@@ -163,25 +163,41 @@ class ReportController extends Controller
                 'test_id' => $validated['test_id'],
             ];
 
-            // Check if the record already exists in the 'report_test' table
-            $existingRecord = DB::table('report_test')->where($where)->first();
+            // If the record does not exist, create a new one
+            DB::table('report_test')->insert($where);
 
-            if ($existingRecord) {
-                // If the record exists, return an error response
-                return returnWebJsonResponse('This record is already in the Report', 'error', $existingRecord);
-            } else {
-                // If the record does not exist, create a new one
-                DB::table('report_test')->insert($where);
+            $report_test = DB::table('report_test')->where($where)->first();
 
-                $report_test = DB::table('report_test')->where($where)->first();
+            // Fetch the newly inserted record
+            $newRecord = Test::find($validated['test_id']);
+            $subCategory = SubCategory::find($newRecord->sub_category_id);
+            $newRecord['sub_category'] = $subCategory;
+            $newRecord['report_test'] = $report_test;
 
-                // Fetch the newly inserted record
-                $newRecord = Test::find($validated['test_id']);
-                $newRecord['report_test'] = $report_test;
+            // Return a success response with a message
+            return returnWebJsonResponse('Test added to Report', 'success', $newRecord);
 
-                // Return a success response with a message
-                return returnWebJsonResponse('Test added to Report', 'success', $newRecord);
-            }
+            // // Check if the record already exists in the 'report_test' table
+            // $existingRecord = DB::table('report_test')->where($where)->first();
+
+            // if ($existingRecord) {
+            //     // If the record exists, return an error response
+            //     return returnWebJsonResponse('This record is already in the Report', 'error', $existingRecord);
+            // } else {
+            //     // If the record does not exist, create a new one
+            //     DB::table('report_test')->insert($where);
+
+            //     $report_test = DB::table('report_test')->where($where)->first();
+
+            //     // Fetch the newly inserted record
+            //     $newRecord = Test::find($validated['test_id']);
+            //     $subCategory = SubCategory::find($newRecord->sub_category_id);
+            //     $newRecord['sub_category'] = $subCategory;
+            //     $newRecord['report_test'] = $report_test;
+
+            //     // Return a success response with a message
+            //     return returnWebJsonResponse('Test added to Report', 'success', $newRecord);
+            // }
         } catch (\Exception $e) {
 
             // Return a JSON response with the error message

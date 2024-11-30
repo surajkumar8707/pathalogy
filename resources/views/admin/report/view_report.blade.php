@@ -76,6 +76,7 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>Sub Category</th>
                                             <th>Test</th>
                                             <th>Upper Value</th>
                                             <th>Percent</th>
@@ -87,6 +88,7 @@
                                             {{-- @dd($test->toArray(), $test->pivot->report_id, $test->pivot->lower_value) --}}
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $test->subCategory->name }}</td>
                                                 <td>{{ $test->name }}</td>
                                                 <td>{{ $test->upper_value }}</td>
                                                 <td>{{ $test->percent ?? 'N/A' }}</td>
@@ -203,6 +205,7 @@
                         let newRow = `
                             <tr>
                         <td>${newTest.id}</td>
+                        <td>${newTest.sub_category.name}</td>
                         <td>${newTest.name}</td>
                         <td>${newTest.upper_value}</td>
                         <td>${newTest.percent || 'N/A'}</td>
