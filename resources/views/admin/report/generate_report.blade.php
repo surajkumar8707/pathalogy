@@ -151,8 +151,8 @@
                                 <tr>
                                     <th>S.No</th>
                                     <th>Test Name</th>
-                                    <th>Percent</th>
                                     <th>Upper Value</th>
+                                    <th>Percent</th>
                                     <th>Lower Value</th>
                                 </tr>
                             </thead>
@@ -161,8 +161,8 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $test->name }}</td>
-                                        <td>{{ $test->percent }}%</td>
                                         <td>{{ $test->upper_value }}</td>
+                                        <td>{{ $test->percent }}%</td>
                                         <td>{{ $test->pivot->lower_value }}</td>
                                     </tr>
                                 @endforeach
