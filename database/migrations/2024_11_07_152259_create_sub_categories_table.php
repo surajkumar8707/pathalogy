@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->timestamps();
+            $table->enum('type', ['percent','number'])->default('number');
+            $table->float('discount');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

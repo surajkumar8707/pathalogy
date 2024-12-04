@@ -9,7 +9,8 @@
                     <div class="col-md-6">
                         <h3 class="card-title">SubCategory List</h3>
                     </div>
-                    <div class="col-md-6 text-end"> <a href="{{ route('admin.sub-categories.create') }}" class="btn btn-primary mb-3">Add New SubCategory</a></div>
+                    <div class="col-md-6 text-end"> <a href="{{ route('admin.sub-categories.create') }}"
+                            class="btn btn-primary mb-3">Add New SubCategory</a></div>
                 </div>
             </div>
             <div class="card-body">
@@ -25,6 +26,7 @@
                                         <th>ID</th>
                                         <th>Category</th>
                                         <th>Name</th>
+                                        <th>Discount</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -35,9 +37,25 @@
                                             <td>{{ $subCategory->category->name }}</td>
                                             <td>{{ $subCategory->name }}</td>
                                             <td>
-                                                <a href="{{ route('admin.sub-categories.show', $subCategory->id) }}" class="btn btn-info btn-sm">View</a>
-                                                <a href="{{ route('admin.sub-categories.edit', $subCategory->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                                <form action="{{ route('admin.sub-categories.destroy', $subCategory->id) }}" method="POST" style="display:inline;">
+                                                <div>
+                                                    <p class="m-0 p-0"><strong>Discount Type : </strong>
+                                                        @if ($subCategory->type == 'number')
+                                                            <span class="badge text-primary">{{ $subCategory->type }}</span>
+                                                        @else
+                                                            <span class="badge text-success">{{ $subCategory->type }}</span>
+                                                        @endif
+                                                    </p>
+                                                    <p class="m-0 p-0"><strong>Discount : </strong>
+                                                        {{ $subCategory->discount }}</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.sub-categories.show', $subCategory->id) }}"
+                                                    class="btn btn-info btn-sm">View</a>
+                                                <a href="{{ route('admin.sub-categories.edit', $subCategory->id) }}"
+                                                    class="btn btn-warning btn-sm">Edit</a>
+                                                <form action="{{ route('admin.sub-categories.destroy', $subCategory->id) }}"
+                                                    method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>

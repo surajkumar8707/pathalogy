@@ -17,10 +17,14 @@ class SubCategorySeeder extends Seeder
             [
                 'category_id' => 1,
                 'name' => 'CBC (Complete Blood Test)',
+                'type' => 'number',
+                'discount' => 10,
             ],
             [
                 'category_id' => 1,
                 'name' => 'Serology',
+                'type' => 'percent',
+                'discount' => 10,
             ],
         ];
 

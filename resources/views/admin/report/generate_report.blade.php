@@ -174,58 +174,6 @@
                 </section>
             @empty
             @endforelse
-            {{-- <section class="test-results">
-                <h2>Complete Blood Count (CBC)</h2>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Test Name</th>
-                            <th>Value</th>
-                            <th>Unit</th>
-                            <th>Normal Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Haemoglobin (Hb)</td>
-                            <td>12.2</td>
-                            <td>gm/dl</td>
-                            <td>13.5 - 17.5</td>
-                        </tr>
-                        <tr>
-                            <td>Total Leucocyte Count (TLC)</td>
-                            <td>5550</td>
-                            <td>/cumm</td>
-                            <td>4000 - 11000</td>
-                        </tr>
-                        <tr>
-                            <td>Neutrophil</td>
-                            <td>58</td>
-                            <td>%</td>
-                            <td>40 - 75</td>
-                        </tr>
-                        <tr>
-                            <td>Lymphocyte</td>
-                            <td>35</td>
-                            <td>%</td>
-                            <td>20 - 45</td>
-                        </tr>
-                        <!-- Add more rows as needed -->
-                    </tbody>
-                </table>
-            </section>
-
-            <section class="serology">
-                <h2>Serology</h2>
-                <table class="table table-bordered">
-                    <tr>
-                        <td>CRP (Quantitative)</td>
-                        <td>1.2</td>
-                        <td>mg/L</td>
-                        <td>0.0 - 6.0</td>
-                    </tr>
-                </table>
-            </section> --}}
 
             <section class="interpretation">
                 <h3>Interpretation</h3>
@@ -242,9 +190,9 @@
 
         <!-- Download Button -->
         <div class="text-center my-4">
-            <button id="download-btn" class="btn btn-primary">Download PDF</button>
-            <a id="back-btn" href="{{ route('admin.report.view.report', $report->id) }}"
-                class="btn btn-secondary d-inline-block">Back</a>
+            <button id="download-btn" class="btn btn-primary">Download Report PDF</button>
+            <a id="back-btn" href="{{ route('admin.report.view.report', $report->id) }}" class="btn btn-secondary d-inline-block">Back</a>
+            <a id="receipt-btn" href="{{ route('admin.report.receipt.report', $report->id) }}" class="btn btn-success d-inline-block">Receipt</a>
         </div>
     </div>
 

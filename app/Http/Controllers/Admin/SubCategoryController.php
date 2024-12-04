@@ -32,9 +32,12 @@ class SubCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
+            'type' => 'required',
+            'discount' => 'required|integer',
         ]);
 
         SubCategory::create($request->all());

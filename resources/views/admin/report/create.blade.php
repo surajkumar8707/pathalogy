@@ -69,7 +69,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="test">Tests</label>
-                                <select name="test[]" id="test" class="form-control" required multiple>
+                                <select name="test[]" id="test" class="form-control" required multiple="multiple">
                                     <option value="">-- Select Test --</option>
                                     {{-- @forelse ($tests as $key => $test)
                                         <option value="{{ $test->id }}">{{ $test->name }}</option>
@@ -92,96 +92,11 @@
 @endsection
 
 @push('scripts')
-    {{-- <script>
-        $("#category,#sub_category,#test").select2();
-        $(document).ready(function() {
-            $('#category').change(function() {
-                let $this = $(this);
-                let category_id = $this.val();
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('admin.report.fetch.subcategory') }}",
-                    data: {
-                        category_id: category_id,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    // success: function(response){
-                    //     console.log(response);
-                    //     if(response.status == "error"){
-                    //         toastr.error(response.message, "Error !");
-                    //     }
-                    //     else{
-                    //         let data = response.data;
-                    //         console.log(data);
-                    //         let sub_category = $("#sub_category");
-                    //         let test = $("#test");
-                    //         sub_category.html(`<option value="">-- Select Sub Category --</option>`);
-                    //         test.html(`<option value="">-- Select Test --</option>`);
-
-                    //     }
-                    // },
-                    success: function(response) {
-                        if (response.status === "success") {
-                            let sub_category = $("#sub_category");
-                            sub_category.html(
-                                '<option value="">-- Select Sub Category --</option>'
-                            ); // Clear previous options
-
-                            // Populate subcategories
-                            response.data.forEach(function(item) {
-                                sub_category.append(new Option(item.name, item.id));
-                            });
-                        } else {
-                            toastr.error(response.message, "Error !");
-                        }
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.log(xhr, textStatus, errorThrown);
-                        toastr.error(errorThrown, textStatus);
-                    },
-                });
-                // alert(category_id);
-            });
-
-            $('#sub_category').change(function() {
-                let $this = $(this);
-                let sub_category_id = $this.val();
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('admin.report.fetch.test') }}",
-                    data: {
-                        sub_category_id: sub_category_id,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        if (response.status === "success") {
-                            let test = $("#test");
-                            test.html(
-                                '<option value="">-- Select Test --</option>'
-                                ); // Clear previous options
-
-                            // Populate subcategories
-                            response.data.forEach(function(item) {
-                                test.append(new Option(item.name, item.id));
-                            });
-                        } else {
-                            toastr.error(response.message, "Error !");
-                        }
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.log(xhr, textStatus, errorThrown);
-                        toastr.error(errorThrown, textStatus);
-                    },
-                });
-                // alert(category_id);
-            });
-        });
-    </script> --}}
     <script>
         // Initialize select2 on the category, sub_category, and test selects
         $("#category, #sub_category, #test").select2();
         // $(document).ready(function() {
+
 
 
         // Handle category change
@@ -243,7 +158,7 @@
                     if (response.status === "success") {
                         let test = $("#test");
                         test.html(
-                            '<option value="">-- Select Test --</option>'); // Clear previous options
+                            '<option value="all">Select All</option>'); // Clear previous options
 
                         // Populate tests
                         response.data.forEach(function(item) {
@@ -262,6 +177,59 @@
                 }
             });
         });
+
+        // $('#test').on('select2:select', function (e) {
+        //     var selectedValue = e.params.data.id;
+        //     if (selectedValue === 'all') {
+        //         // If "Select All" is selected, select all options
+        //         var allOptions = $('#test option');
+        //         var selectedValues = [];
+
+        //         allOptions.each(function() {
+        //             // Get all values except "Select All"
+        //             if ($(this).val() !== 'all') {
+        //                 selectedValues.push($(this).val());
+        //             }
+        //         });
+
+        //         // Set all options as selected
+        //         $('#test').val(selectedValues).trigger('change');
+        //     }
+        // });
+
+        $('#test').on('select2:select', function (e) {
+    var selectedValue = e.params.data.id;
+
+    // If "Select All" is selected, select all options
+    if (selectedValue === 'all') {
+        var allOptions = $('#test option');
+        var selectedValues = [];
+
+        // Push all options into selectedValues except "Select All"
+        allOptions.each(function() {
+            if ($(this).val() !== 'all') {
+                selectedValues.push($(this).val());
+            }
+        });
+
+        // Set all options as selected
+        $('#test').val(selectedValues).trigger('change');
+    }
+});
+
+// Deselect "Select All" if any other option is deselected
+$('#test').on('select2:unselect', function (e) {
+    var unselectedValue = e.params.data.id;
+    var allOptions = $('#test option');
+    var selectedValues = $('#test').val();
+
+    // Check if any option besides "Select All" is unselected
+    if (unselectedValue !== 'all' && selectedValues.indexOf('all') !== -1) {
+        // Deselect "Select All" if any other option is deselected
+        $('#test').val(selectedValues.filter(value => value !== 'all')).trigger('change');
+    }
+});
+
         // });
     </script>
 @endpush

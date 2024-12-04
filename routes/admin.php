@@ -72,6 +72,7 @@ Route::middleware('role:admin')->group(function () {
     Route::group(['prefix' => '/report', 'as' => 'report.'], function () {
         Route::post('/store', [ReportController::class, 'store'])->name('store');
         Route::get('/generate-report/{report_id}', [ReportController::class, 'generateReport'])->name('generate.report');
+        Route::get('/receipt-report/{report_id}', [ReportController::class, 'receiptReport'])->name('receipt.report');
         Route::post('/save-single-test', [ReportController::class, 'saveSingleTest'])->name('save.single.test');
         Route::post('/fetch-subcategory', [ReportController::class, 'fetchSubcategory'])->name('fetch.subcategory');
         Route::post('/fetch-test', [ReportController::class, 'fetchTest'])->name('fetch.test');

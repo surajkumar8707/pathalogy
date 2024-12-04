@@ -289,6 +289,46 @@ class ReportController extends Controller
         }
     }
 
+    public function receiptReport(int $report_id)
+    {
+        try {
+            $setting = ReportSetting::first();
+            // Fetch the report by its ID with its related category and sub-category
+            $report = Report::with('category', 'subCategory')->findOrFail($report_id);
+
+            // Fetch all sub-categories for the report's category
+            $subCategories = SubCategory::where('category_id', $report->category_id)->get();
+
+            // Initialize an array to hold the sub-categories with their respective tests from the pivot table
+            $subCategoryData = [];
+
+            // Loop through each sub-category and fetch the related tests from the pivot table (report_test)
+            foreach ($subCategories as $subCategory) {
+                // Fetch all tests for the current sub-category that are attached to the current report
+                $tests = $report->tests()
+                    ->where('report_test.sub_category_id', $subCategory->id)  // Explicitly use report_test.sub_category_id
+                    ->get();  // Fetch the attached tests
+
+                if (count($tests) > 0) {
+                    // Add the sub-category data to the array, including the tests
+                    $subCategoryData[] = [
+                        'id' => $subCategory->id,
+                        'name' => $subCategory->name,
+                        'tests' => $tests  // Include only the tests attached to this report
+                    ];
+                }
+            }
+
+            // dd($report, $subCategoryData);
+
+            // Return the report along with its sub-categories and their respective tests
+            return view('admin.report.receipt_report', compact('report', 'subCategoryData', 'setting'));
+        } catch (\Exception $e) {
+            // Return with error message if any exception occurs
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
 
 
 
